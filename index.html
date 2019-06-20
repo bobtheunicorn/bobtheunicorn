@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+    <style>
+        td, input, radio { font-size: 30px; } 
+        p { font-size: 35px; }
+        .blank_row { height: 15px };
+    </style>
+</head>
+<body>
+
+<div id="bodyfat">
+    <table style="width:75%">
+    <tr>
+        <td><input type="radio" v-model="gender" value="0">male</td>
+        <td><input type="radio" v-model="gender" value="1">female</td>
+    </tr>
+    <tr class="blank_row"></tr>
+    <tr>
+        <td>age</td>
+        <td><input v-model.number="age"></td>
+    </tr>
+    <tr>
+        <td>measurement 1</td>
+        <td><input v-model.number="m1"></td>
+    </tr>
+    <tr>
+        <td>measurement 2</td>
+        <td><input v-model.number="m2"></td>
+    </tr>
+    <tr>
+        <td>measurement 3</td>
+        <td><input v-model.number="m3"></td>
+    </tr>
+</table>
+<p>{{ percentage }}</p>
+</div>
+
+<script>
+var vm = new Vue({
+		el: '#bodyfat',
+		data: {
+            gender: "1",
+            age: 26,
+			m1: 0,
+			m2: 0,
+			m3: 0,
+		},
+		computed: {
+			percentage: function () {
+            
+				var sum = this.m1 + this.m2 + this.m3;
+                
+                //Jackson-Pollock 3 fold
+                var body_density = this.gender === "1"
+                    ? 1.0994921 - (0.0009929*sum) + (0.0000023*sum*sum) - (0.0001392*this.age)  // female
+                    : 1.10938   - (0.0008267*sum) + (0.0000016*sum*sum) - (0.0002574*this.age); // male
+                
+                //Jackson-Pollock 4 fold
+                //var body_density = 0.29669*sum - 0.00043*sum*sum + 0.02963*this.age + 1.4072;
+                
+                var body_fat_percentage = (495/body_density) - 450;
+                
+				return body_fat_percentage.toFixed(2) + " %";
+			}
+		}
+	})
+</script>
+</body>
+
+</html>
